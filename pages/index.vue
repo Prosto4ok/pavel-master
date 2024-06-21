@@ -12,8 +12,8 @@
                             class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-indigo-400">Заполнить
                             анкету</button>
 
-                        <button @click="showModal = true"
-                            class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-indigo-400">Зарегистрироваться</button>
+                        <!-- <button @click="showModal = true"
+                            class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-indigo-400">Зарегистрироваться</button> -->
                     </div>
                 </div>
                 <div class="mr-4">
@@ -39,52 +39,26 @@
             <div class="flex flex-col items-center space-y-8">
 
                 <div class="grid grid-cols-4 gap-4">
-                    <!-- Дошкольное образование -->
-                    <div class="bg-indigo-400 p-4 rounded-lg w-48 h-60">
+                    <div v-for="(direction, index) in slides" :key="index"
+                        class="bg-indigo-400 p-4 rounded-lg w-48 h-60">
                         <div class="flex flex-col items-center justify-center h-full text-center">
                             <img src="~/assets/css/img/logo2.png" alt="Дошкольное образование" class="w-24 h-24 mb-2" />
-                            <h3 class="text-md font-semibold text-white">Дошкольное образование</h3>
-                            <button @click="showDirectionModal('Дошкольное образование')"
-                                class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-indigo-400">Подробнее</button>
-                        </div>
-                    </div>
-                    <!-- Информационные системы и программирование -->
-                    <div class="bg-indigo-400 p-4 rounded-lg w-48 h-60">
-                        <div class="flex flex-col items-center justify-center h-full text-center">
-                            <img src="~/assets/css/img/logo3.png" alt="Информационные системы и программирование"
-                                class="w-24 h-24 mb-2" />
-                            <h3 class="text-md font-semibold text-white">Информационные системы и программирование</h3>
-                            <button @click="showDirectionModal('Информационные системы и программирование')"
-                                class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-indigo-400">Подробнее</button>
-                        </div>
-                    </div>
-                    <!-- Финансы -->
-                    <div class="bg-indigo-400 p-4 rounded-lg w-48 h-60">
-                        <div class="flex flex-col items-center justify-center h-full text-center">
-                            <img src="~/assets/css/img/logo4.png" alt="Финансы" class="w-24 h-24 mb-2" />
-                            <h3 class="text-md font-semibold text-white">Финансы</h3>
-                            <button @click="showDirectionModal('Финансы')"
-                                class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-indigo-400">Подробнее</button>
-                        </div>
-                    </div>
-                    <!-- Физическая культура -->
-                    <div class="bg-indigo-400 p-4 rounded-lg w-48 h-60">
-                        <div class="flex flex-col items-center justify-center h-full text-center">
-                            <img src="~/assets/css/img/logo5.png" alt="Физическая культура" class="w-24 h-24 mb-2" />
-                            <h3 class="text-md font-semibold text-white">Физическая культура</h3>
-                            <button @click="showDirectionModal('Физическая культура')"
+                            <h3 class="text-md font-semibold text-white">{{ direction.title }}</h3>
+                            <button @click="showDirectionModal(direction.title)"
                                 class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-indigo-400">Подробнее</button>
                         </div>
                     </div>
                 </div>
                 <div class="flex space-x-4">
-                    <button
-                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded w-12 h-12 flex items-center justify-center">
+                    <button @click="prevslide"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded w-12 h-12 flex items-center justify-center"
+                        :disabled="slidestart == 0" :class="{ 'hidden': slidestart == 0 }">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
-                    <button
+                    <button @click="nextslide" :disabled="slideend == lengthdirections"
+                        :class="{ 'hidden': slideend == lengthdirections }"
                         class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded w-12 h-12 flex items-center justify-center">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -173,7 +147,7 @@
             </div>
         </div>
 
-        <<footer
+        <footer
             :class="[theme === 'dark' ? 'bg-gray-800 text-white border-gray-700' : 'bg-indigo-400 text-white border-gray-300']"
             class="mt-8 relative">
             <div class="flex justify-between items-center px-6 py-4 bg-sky-10 text-white">
@@ -188,40 +162,42 @@
             <p class="text-center text-white">&copy; 2024 Колледж онлайн обучение</p>
             <div class="absolute bottom-4 left-4 flex items-center space-x-2">
                 <button @click="toggleTheme" aria-label="Toggle theme" :class="[
-                    'h-6 w-12 rounded-full transition-colors',
-                    theme === 'light' ? 'bg-gray-200 dark:bg-gray-700' : 'bg-gray-900 dark:bg-gray-300'
-                ]">
+        'h-6 w-12 rounded-full transition-colors',
+        theme === 'light' ? 'bg-gray-200 dark:bg-gray-700' : 'bg-gray-900 dark:bg-gray-300'
+    ]
+        ">
                     <div :class="[
-                        'h-5 w-5 rounded-full bg-white shadow-md transition-transform',
-                        theme === 'light' ? 'translate-x-1' : 'translate-x-6'
-                    ]"></div>
+        'h-5 w-5 rounded-full bg-white shadow-md transition-transform',
+        theme === 'light' ? 'translate-x-1' : 'translate-x-6'
+    ]
+        "></div>
                 </button>
                 <span class="text-sm font-medium">{{ theme === 'light' ? 'Light' : 'Dark' }} Mode</span>
             </div>
-            </footer>
-            <ModalComponent :showModal="showModal" @close="showModal = false">
-                <template v-slot:header>
-                    <h2 class="text-center font-bold mt-2 mb-6"> Анкета</h2>
-                </template>
-                <template v-slot:body>
-                    <form @submit.prevent="handleSubmit">
-                        <label for="name">ФИО:</label>
-                        <input v-model="formData.name" type="text" id="name" class="block w-full mb-2">
+        </footer>
+        <ModalComponent :showModal="showModal" @close="showModal = false">
+            <template v-slot:header>
+                <h2 class="text-center font-bold mt-2 mb-6"> Анкета</h2>
+            </template>
+            <template v-slot:body>
+                <form @submit.prevent="handleSubmit">
+                    <label for="name">ФИО:</label>
+                    <input v-model="formData.name" type="text" id="name" class="block w-full mb-2">
 
-                        <label for="phone">Телефон:</label>
-                        <input v-model="formData.phone" type="text" id="phone" class="block w-full mb-2">
+                    <label for="phone">Телефон:</label>
+                    <input v-model="formData.phone" type="text" id="phone" class="block w-full mb-2">
 
-                        <label for="email">Email:</label>
-                        <input v-model="formData.email" type="email" id="email" class="block w-full mb-2">
+                    <label for="email">Email:</label>
+                    <input v-model="formData.email" type="email" id="email" class="block w-full mb-2">
 
-                        <label for="message">Сообщение:</label>
-                        <input v-model="formData.message" type="text" id="message" class="block w-full mb-2">
+                    <label for="message">Сообщение:</label>
+                    <input v-model="formData.message" type="text" id="message" class="block w-full mb-2">
 
-                        <button type="submit"
-                            class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-indigo-400">Отправить</button>
-                    </form>
-                </template>
-            </ModalComponent>
+                    <button type="submit"
+                        class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-indigo-400">Отправить</button>
+                </form>
+            </template>
+        </ModalComponent>
     </div>
 </template>
 
@@ -242,11 +218,96 @@ export default {
             count: 0,
             results: []
         });
+
+        const directions = {
+            'Информационные системы и программирование': {
+                title: 'Информационные системы и программирование',
+                form: 'Очная/Заочная',
+                profiles: ['Программирование', 'Сетевые технологии'],
+                profileLinks: {
+                    'Программирование': 'https://vk.com',
+                    'Сетевые технологии': 'https://vk.com'
+                },
+                link: 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437'
+            },
+            'Дошкольное образование': {
+                title: 'Дошкольное образование',
+                form: 'Очная/Заочная',
+                profiles: ['Педагогика', 'Психология'],
+                profileLinks: {
+                    'Педагогика': 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437',
+                    'Психология': 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437'
+                },
+                link: 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437'
+            },
+            'Финансы': {
+                title: 'Финансы',
+                form: 'Очная/Заочная',
+                profiles: ['Педагогика', 'Психология'],
+                profileLinks: {
+                    'Педагогика': 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437',
+                    'Психология': 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437'
+                },
+                link: 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437'
+            },
+            'Физическая культура': {
+                title: 'Физическая культура',
+                form: 'Очная/Заочная',
+                profiles: ['Педагогика', 'Психология'],
+                profileLinks: {
+                    'Педагогика': 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437',
+                    'Психология': 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437'
+                },
+                link: 'https://new.vyatsu.ru'
+            },
+            'test': {
+                title: 'Информационные системы и программирование',
+                form: 'Очная/Заочная',
+                profiles: ['Программирование', 'Сетевые технологии'],
+                profileLinks: {
+                    'Программирование': 'https://vk.com',
+                    'Сетевые технологии': 'https://vk.com'
+                },
+                link: 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437'
+            },
+            'test1': {
+                title: 'Информационные системы и программирование',
+                form: 'Очная/Заочная',
+                profiles: ['Программирование', 'Сетевые технологии'],
+                profileLinks: {
+                    'Программирование': 'https://vk.com',
+                    'Сетевые технологии': 'https://vk.com'
+                },
+                link: 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437'
+            },
+            'test2': {
+                title: 'Информационные системы и программирование',
+                form: 'Очная/Заочная',
+                profiles: ['Программирование', 'Сетевые технологии'],
+                profileLinks: {
+                    'Программирование': 'https://vk.com',
+                    'Сетевые технологии': 'https://vk.com'
+                },
+                link: 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437'
+            },
+        }
+
+        Object.size = function (obj) {
+            var size = 0, key;
+            for (key in obj) {
+                if (obj.hasOwnProperty(key)) size++;
+            }
+            return size;
+        };
+        const slidestart = ref(0);
+        const slideend = ref(4);
+        const slides = ref(Object.values(directions).slice(slidestart.value, slideend.value));
+        const lengthdirections = ref(Object.size(directions))
         const getProfilesData = () => {
             API.get('profiles')
                 .then(response => {
                     profiles.value = response.data;
-                    console.log(profiles.value); 
+                    console.log(profiles.value);
                 })
                 .catch(error => {
                     console.error('Ошибка при выполнении запроса:', error);
@@ -254,11 +315,16 @@ export default {
         };
 
         onMounted(() => {
-            getProfilesData(); 
+            getProfilesData();
         });
 
         return {
+            lengthdirections,
+            slidestart,
+            slideend,
+            directions,
             profiles,
+            slides,
             showModal: ref(false),
             theme: ref('light'),
             showDirection: ref(false),
@@ -269,53 +335,26 @@ export default {
                 email: '',
                 message: '',
             },
-            directions: {
-                'Информационные системы и программирование': {
-                    title: 'Информационные системы и программирование',
-                    form: 'Очная/Заочная',
-                    profiles: ['Программирование', 'Сетевые технологии'],
-                    profileLinks: {
-                        'Программирование': 'https://vk.com',
-                        'Сетевые технологии': 'https://vk.com'
-                    },
-                    link: 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437'
-                },
-                'Дошкольное образование': {
-                    title: 'Дошкольное образование',
-                    form: 'Очная/Заочная',
-                    profiles: ['Педагогика', 'Психология'],
-                    profileLinks: {
-                        'Педагогика': 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437',
-                        'Психология': 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437'
-                    },
-                    link: 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437'
-                },
-                'Финансы': {
-                    title: 'Финансы',
-                    form: 'Очная/Заочная',
-                    profiles: ['Педагогика', 'Психология'],
-                    profileLinks: {
-                        'Педагогика': 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437',
-                        'Психология': 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437'
-                    },
-                    link: 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437'
-                },
-                'Физическая культура': {
-                    title: 'Физическая культура',
-                    form: 'Очная/Заочная',
-                    profiles: ['Педагогика', 'Психология'],
-                    profileLinks: {
-                        'Педагогика': 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437',
-                        'Психология': 'https://new.vyatsu.ru/admission/admission_special/?on_site_level=Бакалавриат%2FСпециалитет&on_site_form_ob=Очно-заочная+%28дистанционно%29&on_base=СПО&other=&on_site_fpodr%5B%5D=437'
-                    },
-                    link: 'https://new.vyatsu.ru'
-                }
-            }
+
         };
     },
     methods: {
         toggleTheme() {
             this.theme = this.theme === 'dark' ? 'light' : 'dark';
+        },
+        prevslide() {
+            console.log(this.slidestart);
+            this.slidestart--;
+            this.slideend--;
+
+            this.slides = Object.values(this.directions).slice(this.slidestart, this.slideend);
+        },
+        nextslide() {
+            console.log(this.slidestart);
+            this.slidestart++;
+            this.slideend++;
+
+            this.slides = Object.values(this.directions).slice(this.slidestart, this.slideend);
         },
         handleSubmit() {
             const postData = new URLSearchParams();
@@ -327,7 +366,7 @@ export default {
             API.post('anketa', postData)
                 .then(response => {
                     console.log('Form submitted successfully:', response.data);
-                    this.showModal = false; 
+                    this.showModal = false;
                     this.formData.name = '';
                     this.formData.phone = '';
                     this.formData.email = '';
